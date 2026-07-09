@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍗 疯狂星期四 · V我50 🍗</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700;900&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --kfc-red: #E4002B;
+            --kfc-dark-red: #B8001F;
+            --kfc-white: #FFFFFF;
+            --kfc-cream: #FFF8E7;
+            --kfc-gold: #FFD700;
+            --kfc-brown: #8B4513;
+        }
+
+        body {
+            font-family: 'Noto Sans CJK SC', 'Noto Sans SC', sans-serif;
+            background: var(--kfc-red);
+            overflow-x: hidden;
+            color: var(--kfc-white);
+        }
+
+        /* ======== 开场遮罩 ======== */
+        #intro-overlay {
+            position: fixed; inset: 0; z-index: 1000;
+            background: #000;
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; cursor: pointer;
+            transition: opacity 0.8s ease;
+        }
+        #intro-overlay.hide { opacity: 0; pointer-events: none; }
+        #intro-overlay .intro-text {
+            font-size: 2rem; font-weight: 900; color: var(--kfc-red);
+            text-align: center; line-height: 1.6;
+            animation: introPulse 1.5s ease-in-out infinite;
+        }
+        #intro-overlay .intro-sub {
+            font-size: 1rem; color: #666; margin-top: 1.5rem;
+            animation: introFade 2s ease-in-out infinite;
+        }
+        @keyframes introPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        @keyframes introFade {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* ======== 飘落鸡腿动画 ======== */
+        .falling-item {
+            position: fixed; z-index: 5;
+            font-size: 2rem;
+            animation: fall linear infinite;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* ======== Hero 区域 ======== */
+        .hero {
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column;
+            position: relative;
+            background: radial-gradient(ellipse at center, var(--kfc-dark-red) 0%, #1a0000 100%);
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 20px,
+                rgba(255,255,255,0.02) 20px,
+                rgba(255,255,255,0.02) 40px
+            );
+        }
+        .hero-content {
+            position: relative; z-index: 2;
+            text-align: center; padding: 2rem;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: var(--kfc-gold);
+            color: var(--kfc-red);
+            padding: 0.5rem 2rem;
+            border-radius: 50px;
+            font-weight: 900;
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            animation: badgeGlow 2s ease-in-out infinite;
+            margin-bottom: 2rem;
+        }
+        @keyframes badgeGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8), 0 0 80px rgba(255, 215, 0, 0.3); }
+        }
+        .hero h1 {
+            font-size: clamp(3rem, 10vw, 7rem);
+            font-weight: 900;
+            line-height: 1.1;
+            text-shadow: 0 4px 30px rgba(0,0,0,0.5);
+            margin-bottom: 1rem;
+        }
+        .hero h1 .v50 {
+            display: block;
+            font-size: clamp(4rem, 15vw, 10rem);
+            background: linear-gradient(135deg, var(--kfc-gold), #FFA500, var(--kfc-gold));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: goldShine 3s ease-in-out infinite;
+            filter: drop-shadow(0 4px 20px rgba(255,215,0,0.5));
+        }
+        @keyframes goldShine {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .hero .subtitle {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: rgba(255,255,255,0.8);
+            margin-top: 1.5rem;
+            font-weight: 300;
+        }
+        .scroll-hint {
+            position: absolute; bottom: 2rem; left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            font-size: 1.5rem;
+            opacity: 0.6;
+            z-index: 2;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-15px); }
+        }
+
+        /* ======== 故事区域 ======== */
+        .story-section {
+            background: var(--kfc-cream);
+            color: #333;
+            padding: 5rem 1.5rem;
+            position: relative;
+        }
+        .story-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .story-section h2 {
+            text-align: center;
+            font-size: 2rem;
+            color: var(--kfc-red);
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        .story-section h2::after {
+            content: '';
+            display: block;
+            width: 60px; height: 4px;
+            background: var(--kfc-red);
+            margin: 0.5rem auto 0;
+            border-radius: 2px;
+        }
+        .story-text {
+            font-size: 1.15rem;
+            line-height: 2;
+            text-align: justify;
+            color: #444;
+            position: relative;
+        }
+        .story-text .highlight {
+            color: var(--kfc-red);
+            font-weight: 700;
+        }
+        .story-text .golden {
+            color: var(--kfc-brown);
+            font-weight: 700;
+        }
+        .typing-cursor {
+            display: inline-block;
+            width: 2px; height: 1.2em;
+            background: var(--kfc-red);
+            vertical-align: text-bottom;
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        /* ======== 菜单区域 ======== */
+        .menu-section {
+            background: linear-gradient(180deg, var(--kfc-red) 0%, var(--kfc-dark-red) 100%);
+            padding: 5rem 1.5rem;
+            text-align: center;
+        }
+        .menu-section h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .menu-section .menu-sub {
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 3rem;
+        }
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .menu-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 16px;
+            padding: 2rem 1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: default;
+        }
+        .menu-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.15);
+        }
+        .menu-emoji {
+            font-size: 3.5rem;
+            display: block;
+            margin-bottom: 0.8rem;
+            animation: wiggle 3s ease-in-out infinite;
+        }
+        .menu-card:nth-child(2) .menu-emoji { animation-delay: 0.5s; }
+        .menu-card:nth-child(3) .menu-emoji { animation-delay: 1s; }
+        .menu-card:nth-child(4) .menu-emoji { animation-delay: 1.5s; }
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+        .menu-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+        .menu-desc {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 0.4rem;
+        }
+        .menu-price {
+            color: var(--kfc-gold);
+            font-size: 1.3rem;
+            font-weight: 900;
+        }
+        .menu-price .original {
+            text-decoration: line-through;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.9rem;
+            font-weight: 400;
+            margin-left: 0.5rem;
+        }
+
+        /* ======== 收款区域 ======== */
+        .pay-section {
+            background: linear-gradient(135deg, #1a0000 0%, #2d0a0a 50%, #1a0000 100%);
+            padding: 5rem 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .pay-section::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(228, 0, 43, 0.15) 0%, transparent 70%);
+        }
+        .pay-content {
+            position: relative; z-index: 2;
+        }
+        .pay-section h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .pay-section .pay-sub {
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+        }
+        /* ======== 弹窗 ======== */
+        .qr-modal {
+            position: fixed; inset: 0; z-index: 1500;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.35s ease;
+        }
+        .qr-modal.open {
+            opacity: 1; pointer-events: auto;
+        }
+        .qr-modal-overlay {
+            position: absolute; inset: 0;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(6px);
+        }
+        .qr-modal-content {
+            position: relative; z-index: 2;
+            background: white;
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+            transform: scale(0.85) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 90vw;
+        }
+        .qr-modal.open .qr-modal-content {
+            transform: scale(1) translateY(0);
+        }
+        .qr-modal-content img {
+            width: 320px; height: 320px;
+            border-radius: 16px;
+            display: block;
+            margin: 0 auto;
+        }
+        .qr-modal-title {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--kfc-red);
+            margin-bottom: 1.2rem;
+        }
+        .qr-modal-hint {
+            margin-top: 1rem;
+            color: #666;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        .qr-modal-hint span {
+            color: var(--kfc-red);
+        }
+        .qr-close {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            width: 36px; height: 36px;
+            border: none;
+            background: #f0f0f0;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center;
+            line-height: 1;
+        }
+        .qr-close:hover {
+            background: var(--kfc-red);
+            color: white;
+            transform: rotate(90deg);
+        }
+        .qr-show-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 1.2rem 3rem;
+            border: none;
+            background: linear-gradient(135deg, var(--kfc-red), #ff1a4a);
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 900;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            box-shadow: 0 10px 30px rgba(228, 0, 43, 0.4);
+            margin-top: 1rem;
+        }
+        .qr-show-btn:hover {
+            transform: scale(1.08) translateY(-3px);
+            box-shadow: 0 15px 40px rgba(228, 0, 43, 0.6);
+        }
+        .qr-show-btn .btn-emoji {
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .qr-modal-content { padding: 1.5rem; }
+            .qr-modal-content img { width: 260px; height: 260px; }
+            .qr-show-btn { padding: 1rem 2rem; font-size: 1.1rem; }
+        }
+
+        /* ======== 倒计时/口令区域 ======== */
+        .cta-section {
+            background: var(--kfc-cream);
+            color: #333;
+            padding: 5rem 1.5rem;
+            text-align: center;
+        }
+        .cta-section h2 {
+            font-size: 2rem;
+            color: var(--kfc-red);
+            margin-bottom: 1rem;
+        }
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        .countdown-item {
+            background: var(--kfc-red);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            min-width: 80px;
+        }
+        .countdown-num {
+            font-size: 2.5rem;
+            font-weight: 900;
+            display: block;
+            line-height: 1;
+        }
+        .countdown-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 0.3rem;
+            display: block;
+        }
+        .copy-pasta {
+            max-width: 600px;
+            margin: 2rem auto 0;
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: left;
+            position: relative;
+        }
+        .copy-pasta h3 {
+            color: var(--kfc-red);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        .copy-pasta-text {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: #555;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            background: var(--kfc-red);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        .copy-btn:hover { background: var(--kfc-dark-red); transform: scale(1.05); }
+        .copy-btn.copied { background: #28a745; }
+
+        /* ======== 页脚 ======== */
+        footer {
+            background: #0a0000;
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.85rem;
+        }
+        footer .footer-emoji {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ======== 烟花/彩带效果 ======== */
+        .confetti {
+            position: fixed;
+            width: 10px; height: 10px;
+            z-index: 999;
+            pointer-events: none;
+            animation: confettiFall linear forwards;
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg) scale(0); opacity: 0; }
+        }
+
+        /* ======== Toast ======== */
+        .toast {
+            position: fixed;
+            bottom: 2rem; left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(0,0,0,0.85);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            z-index: 2000;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ======== 滚动动画 ======== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ======== 响应式 ======== */
+        @media (max-width: 600px) {
+            .menu-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 开场遮罩 -->
+<div id="intro-overlay">
+    <div class="intro-text">
+        今天是星期四
+    </div>
+    <div class="intro-sub">点击任意位置，开启疯狂</div>
+</div>
+
+<!-- 飘落鸡腿容器 -->
+<div id="falling-container"></div>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">KFC · CRAZY THURSDAY</div>
+        <h1>
+            疯狂星期四
+            <span class="v50">V我50</span>
+        </h1>
+        <p class="subtitle">今天不吃炸鸡，这个星期就白过了</p>
+    </div>
+    <div class="scroll-hint">⬇</div>
+</section>
+
+<!-- 小作文区域 -->
+<section class="story-section">
+    <div class="story-container reveal">
+        <h2>一份来自灵魂深处的呼唤</h2>
+        <div class="story-text" id="story-text"></div>
+    </div>
+</section>
+
+<!-- 菜单区域 -->
+<section class="menu-section">
+    <div class="reveal">
+        <h2>今日疯四限定</h2>
+        <p class="menu-sub">这一天，什么都不重要，价格最重要</p>
+    </div>
+    <div class="menu-grid reveal">
+        <div class="menu-card">
+            <span class="menu-emoji">🥓</span>
+            <div class="menu-name">黄金鸡块</div>
+            <div class="menu-desc">9块</div>
+            <div class="menu-price">¥9.9</div>
+        </div>
+        <div class="menu-card">
+            <span class="menu-emoji">🔥</span>
+            <div class="menu-name">热辣香骨鸡</div>
+            <div class="menu-desc">15块</div>
+            <div class="menu-price">¥19.9</div>
+        </div>
+        <div class="menu-card">
+            <span class="menu-emoji">🍢</span>
+            <div class="menu-name">酥脆虾滑串</div>
+            <div class="menu-desc">2串</div>
+            <div class="menu-price">¥19.9<span class="original">¥31.8</span></div>
+        </div>
+        <div class="menu-card">
+            <span class="menu-emoji">🥧</span>
+            <div class="menu-name">葡式蛋挞</div>
+            <div class="menu-desc">8只</div>
+            <div class="menu-price">¥29.9</div>
+        </div>
+    </div>
+</section>
+
+<!-- 收款区域 -->
+<section class="pay-section">
+    <div class="pay-content reveal">
+        <h2>行动起来</h2>
+        <p class="pay-sub">有些事不用多说，懂的自然懂</p>
+        <button class="qr-show-btn" onclick="openQrModal()">
+            <span class="btn-emoji">✨</span>
+            <span>我相信你是一个有温度的人</span>
+        </button>
+    </div>
+</section>
+
+<!-- 收款码弹窗 -->
+<div class="qr-modal" id="qrModal">
+    <div class="qr-modal-overlay" onclick="closeQrModal()"></div>
+    <div class="qr-modal-content">
+        <button class="qr-close" onclick="closeQrModal()">✕</button>
+        <div class="qr-modal-title">微信扫一扫 · V我多少你说了算</div>
+        <img src="media/微信收款码.jpg" alt="微信收款码">
+        <div class="qr-modal-hint">打开微信 → 扫一扫 → 选择金额 → <span>转账</span></div>
+    </div>
+</div>
+
+<!-- 口令 + 倒计时 -->
+<section class="cta-section">
+    <div class="reveal">
+        <h2>距离下一个疯狂星期四</h2>
+        <div class="countdown" id="countdown">
+            <div class="countdown-item">
+                <span class="countdown-num" id="cd-days">0</span>
+                <span class="countdown-label">天</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-num" id="cd-hours">0</span>
+                <span class="countdown-label">时</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-num" id="cd-mins">0</span>
+                <span class="countdown-label">分</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-num" id="cd-secs">0</span>
+                <span class="countdown-label">秒</span>
+            </div>
+        </div>
+    </div>
+    <div class="copy-pasta reveal">
+        <button class="copy-btn" onclick="copyPasta()">复制文案</button>
+        <h3>疯四必备小作文（点击右上角一键复制）</h3>
+        <div class="copy-pasta-text" id="pasta-text">你好，我是秦始皇。其实我并没有死，我在西安有100吨黄金。现在我需要50块钱来解冻我的资产。你今天微信转我50，等我复国了，封你做兵马俑大将军。今天是肯德基疯狂星期四，我先去吃个套餐，等你封赏。V我50，聆听我的复国计划。</div>
+    </div>
+</section>
+
+<!-- 页脚 -->
+<footer>
+    <div class="footer-emoji">🍗🍔🍟🥤</div>
+    <p>本页面纯属整活，V不V随你，但不V的话……</p>
+    <p style="margin-top: 0.5rem;">不V的话那就算了吧 😢</p>
+</footer>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+    // ======== 开场 ========
+    const overlay = document.getElementById('intro-overlay');
+    overlay.addEventListener('click', () => {
+        overlay.classList.add('hide');
+        setTimeout(() => overlay.style.display = 'none', 800);
+        startFalling();
+        showToast('🍗 欢迎来到疯狂星期四！向下滚动查看更多');
+    });
+
+    // ======== 飘落动画 ========
+    const foodEmojis = ['🍗', '🍔', '🍟', '🥤', '🥪', '🌮', '🍕', '🥧'];
+    function createFallingItem() {
+        const item = document.createElement('div');
+        item.className = 'falling-item';
+        item.textContent = foodEmojis[Math.floor(Math.random() * foodEmojis.length)];
+        item.style.left = Math.random() * 100 + 'vw';
+        item.style.fontSize = (1.2 + Math.random() * 1.5) + 'rem';
+        item.style.animationDuration = (4 + Math.random() * 6) + 's';
+        item.style.animationDelay = Math.random() * 2 + 's';
+        document.getElementById('falling-container').appendChild(item);
+        setTimeout(() => item.remove(), 12000);
+    }
+    function startFalling() {
+        setInterval(createFallingItem, 400);
+    }
+
+    // ======== 打字机效果 ========
+    const storyContent = `你好，我是你的好朋友。我们认识已经很久了，一起经历了无数风风雨雨。<br><br>
+        但今天，我遇到了一件<span class="highlight">十万火急</span>的事情。<br><br>
+        我正在进行一项<span class="golden">关于人类幸福感</span>的学术研究，研究结果表明：<br>
+        <span class="highlight">在星期四摄入肯德基炸鸡，能显著提升多巴胺分泌水平。</span><br><br>
+        但是！我的研究经费已经<span class="highlight">全部花完了</span>。现在我只需要<span class="golden">50块钱</span>就能完成这项伟大的研究。<br><br>
+        请你务必在<span class="highlight">今天</span>之前将研究经费打入我的账户。<br>
+        这不仅仅是一顿饭，这是为了<span class="golden">全人类的幸福</span>。<br><br>
+        <span class="highlight">V我50，你将载入史册。</span>`;
+
+    let storyIndex = 0;
+    let storyStarted = false;
+    const storyEl = document.getElementById('story-text');
+
+    function typeStory() {
+        if (storyIndex < storyContent.length) {
+            const current = storyContent.substring(0, storyIndex + 1);
+            // Only update innerHTML at certain points to avoid flicker
+            if (storyContent[storyIndex] === '<') {
+                // Skip to end of tag
+                const tagEnd = storyContent.indexOf('>', storyIndex);
+                storyIndex = tagEnd + 1;
+            } else {
+                storyIndex++;
+            }
+            storyEl.innerHTML = storyContent.substring(0, storyIndex) + '<span class="typing-cursor"></span>';
+            setTimeout(typeStory, 30);
+        } else {
+            storyEl.innerHTML = storyContent;
+        }
+    }
+
+    // ======== 滚动动画 ========
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                // 触发打字效果
+                if (entry.target.querySelector('#story-text') && !storyStarted) {
+                    storyStarted = true;
+                    setTimeout(typeStory, 500);
+                }
+            }
+        });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ======== 倒计时 ========
+    function getNextThursday() {
+        const now = new Date();
+        const day = now.getDay();
+        let daysUntilThursday = (4 - day + 7) % 7;
+        if (daysUntilThursday === 0 && now.getHours() >= 23) daysUntilThursday = 7;
+        if (daysUntilThursday === 0) daysUntilThursday = 7; // If today is Thursday, show next Thursday
+        const next = new Date(now);
+        next.setDate(now.getDate() + daysUntilThursday);
+        next.setHours(0, 0, 0, 0);
+        return next;
+    }
+
+    function updateCountdown() {
+        const now = new Date();
+        const target = getNextThursday();
+        let diff = target - now;
+        if (diff < 0) diff += 7 * 24 * 60 * 60 * 1000;
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById('cd-days').textContent = days;
+        document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
+        document.getElementById('cd-secs').textContent = String(secs).padStart(2, '0');
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // ======== 弹窗控制 ========
+    function openQrModal() {
+        document.getElementById('qrModal').classList.add('open');
+        document.body.style.overflow = 'hidden';
+        launchConfetti();
+    }
+    function closeQrModal() {
+        document.getElementById('qrModal').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeQrModal();
+    });
+
+    // ======== 彩带效果 ========
+    function launchConfetti() {
+        const colors = ['#E4002B', '#FFD700', '#FF6B6B', '#FFA500', '#FF4081', '#7C4DFF'];
+        for (let i = 0; i < 40; i++) {
+            setTimeout(() => {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = (5 + Math.random() * 10) + 'px';
+                confetti.style.height = (5 + Math.random() * 10) + 'px';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                confetti.style.animationDuration = (2 + Math.random() * 3) + 's';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 5000);
+            }, i * 30);
+        }
+    }
+
+    // ======== 复制文案 ========
+    function copyPasta() {
+        const text = document.getElementById('pasta-text').textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.querySelector('.copy-btn');
+            btn.textContent = '已复制！';
+            btn.classList.add('copied');
+            showToast('📝 文案已复制，快去发给你的好兄弟！');
+            setTimeout(() => {
+                btn.textContent = '复制文案';
+                btn.classList.remove('copied');
+            }, 2000);
+        });
+    }
+
+    // ======== Toast ========
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+</script>
+</body>
+</html>
